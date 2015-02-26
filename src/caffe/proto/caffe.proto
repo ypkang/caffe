@@ -316,6 +316,8 @@ message LayerParameter {
   optional SoftmaxParameter softmax_param = 125;
   optional SliceParameter slice_param = 126;
   optional TanHParameter tanh_param = 127;
+  optional HTanHParameter htanh_param = 131;
+  optional LocalParameter local_param = 132;
   optional ThresholdParameter threshold_param = 128;
   optional WindowDataParameter window_data_param = 129;
 }
@@ -403,6 +405,22 @@ message ConvolutionParameter {
   optional Engine engine = 15 [default = DEFAULT];
 }
 
+// Message that stores parameters used by LocalLayer
+message LocalParameter {
+  optional uint32 num_output = 1; // The number of outputs for the layer
+  optional bool bias_term = 2 [default = true]; // whether to have bias terms
+  optional uint32 pad = 3 [default = 0]; // The padding size
+  optional uint32 kernel_size = 4; // The kernel size
+  optional uint32 stride = 6 [default = 1]; // The stride
+  optional FillerParameter weight_filler = 7; // The filler for the weight
+  optional FillerParameter bias_filler = 8; // The filler for the bias
+  enum Engine {
+    DEFAULT = 0;
+    CAFFE = 1;
+    CUDNN = 2;
+  }
+  optional Engine engine = 15 [default = DEFAULT];
+}
 // Message that stores parameters used by DataLayer
 message DataParameter {
   enum DB {
@@ -679,6 +697,15 @@ message TanHParameter {
   }
   optional Engine engine = 1 [default = DEFAULT];
 }
+// Message that stores parameters used by HTanHLayer
+message HTanHParameter {
+  enum Engine {
+    DEFAULT = 0;
+    CAFFE = 1;
+    CUDNN = 2;
+  }
+  optional Engine engine = 1 [default = DEFAULT];
+}
 
 // Message that stores parameters used by ThresholdLayer
 message ThresholdParameter {
@@ -765,6 +792,8 @@ message V1LayerParameter {
     SPLIT = 22;
     SLICE = 33;
     TANH = 23;
+    HTANH = 40;
+    LOCAL = 41;
     WINDOW_DATA = 24;
     THRESHOLD = 31;
   }
@@ -805,6 +834,8 @@ message V1LayerParameter {
   optional SoftmaxParameter softmax_param = 39;
   optional SliceParameter slice_param = 31;
   optional TanHParameter tanh_param = 37;
+  optional HTanHParameter htanh_param = 101;
+  optional LocalParameter local_param = 102;
   optional ThresholdParameter threshold_param = 25;
   optional WindowDataParameter window_data_param = 20;
   optional TransformationParameter transform_param = 36;

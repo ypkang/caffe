@@ -35,6 +35,21 @@ shared_ptr<Layer<Dtype> > GetConvolutionLayer(
 
 REGISTER_LAYER_CREATOR(Convolution, GetConvolutionLayer);
 
+// Get local layer according to engine.
+template <typename Dtype>
+shared_ptr<Layer<Dtype> > GetLocalLayer(const LayerParameter& param) {
+  LocalParameter_Engine engine = param.local_param().engine();
+  if (engine == LocalParameter_Engine_DEFAULT) {
+    engine = LocalParameter_Engine_CAFFE;
+  }
+  if (engine == LocalParameter_Engine_CAFFE) {
+    return shared_ptr<Layer<Dtype> >(new LocalLayer<Dtype>(param));
+  } else {
+    LOG(FATAL) << "Layer " << param.name() << " has unknown engine.";
+  }
+}
+REGISTER_LAYER_CREATOR(Local, GetLocalLayer);
+
 // Get pooling layer according to engine.
 template <typename Dtype>
 shared_ptr<Layer<Dtype> > GetPoolingLayer(const LayerParameter& param) {
@@ -156,6 +171,22 @@ shared_ptr<Layer<Dtype> > GetTanHLayer(const LayerParameter& param) {
 }
 
 REGISTER_LAYER_CREATOR(TanH, GetTanHLayer);
+
+// Get htanh layer according to engine.
+template <typename Dtype>
+shared_ptr<Layer<Dtype> > GetHTanHLayer(const LayerParameter& param) {
+  HTanHParameter_Engine engine = param.htanh_param().engine();
+  if (engine == HTanHParameter_Engine_DEFAULT) {
+    engine = HTanHParameter_Engine_CAFFE;
+  }
+  if (engine == HTanHParameter_Engine_CAFFE) {
+    return shared_ptr<Layer<Dtype> >(new HTanHLayer<Dtype>(param));
+  } else {
+    LOG(FATAL) << "Layer " << param.name() << " has unknown engine.";
+  }
+}
+
+REGISTER_LAYER_CREATOR(HTanH, GetHTanHLayer);
 
 #ifdef WITH_PYTHON_LAYER
 template <typename Dtype>

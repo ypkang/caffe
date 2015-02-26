@@ -514,6 +514,10 @@ V1LayerParameter_LayerType UpgradeV0LayerType(const string& type) {
     return V1LayerParameter_LayerType_SPLIT;
   } else if (type == "tanh") {
     return V1LayerParameter_LayerType_TANH;
+  } else if (type == "htanh") {
+    return V1LayerParameter_LayerType_HTANH;
+  } else if (type == "local") {
+    return V1LayerParameter_LayerType_LOCAL;
   } else if (type == "window_data") {
     return V1LayerParameter_LayerType_WINDOW_DATA;
   } else {
@@ -917,6 +921,10 @@ const char* UpgradeV1LayerType(const V1LayerParameter_LayerType type) {
     return "WindowData";
   case V1LayerParameter_LayerType_THRESHOLD:
     return "Threshold";
+  case V1LayerParameter_LayerType_HTANH:
+    return "HTanH";
+  case V1LayerParameter_LayerType_LOCAL:
+    return "Local";
   default:
     LOG(FATAL) << "Unknown V1LayerParameter layer type: " << type;
     return "";
