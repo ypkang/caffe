@@ -834,8 +834,8 @@ message V1LayerParameter {
   optional SoftmaxParameter softmax_param = 39;
   optional SliceParameter slice_param = 31;
   optional TanHParameter tanh_param = 37;
-  optional HTanHParameter htanh_param = 101;
-  optional LocalParameter local_param = 102;
+  optional HTanHParameter htanh_param = 43;
+  optional LocalParameter local_param = 44;
   optional ThresholdParameter threshold_param = 25;
   optional WindowDataParameter window_data_param = 20;
   optional TransformationParameter transform_param = 36;

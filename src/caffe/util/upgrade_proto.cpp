@@ -589,6 +589,8 @@ void UpgradeNetDataTransformation(NetParameter* net_param) {
 
 bool UpgradeNetAsNeeded(const string& param_file, NetParameter* param) {
   bool success = true;
+  std::cout<<"Before upgrade " << std::endl
+	   << param->DebugString();
   if (NetNeedsV0ToV1Upgrade(*param)) {
     // NetParameter was specified using the old style (V0LayerParameter); try to
     // upgrade it.
@@ -831,6 +833,10 @@ bool UpgradeV1LayerParameter(const V1LayerParameter& v1_layer_param,
   if (v1_layer_param.has_loss_param()) {
     layer_param->mutable_loss_param()->CopyFrom(
         v1_layer_param.loss_param());
+  }
+  if (v1_layer_param.has_local_param()) {
+    layer_param->mutable_local_param()->CopyFrom(
+        v1_layer_param.local_param());
   }
   if (v1_layer_param.has_layer()) {
     LOG(ERROR) << "Input NetParameter has V0 layer -- ignoring.";

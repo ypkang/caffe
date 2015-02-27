@@ -26,6 +26,9 @@ void LocalLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   height_out_ = (height_ + 2 * pad_ - kernel_size_) / stride_ + 1;
   width_out_ = (width_ + 2 * pad_ - kernel_size_) / stride_ + 1;
 
+  std::cout<<"STRIDE "<<stride_<<std::endl;
+  std::cout<<"KERNEL SIZE "<<kernel_size_<<std::endl;
+
   M_ = num_output_;
   K_ = channels_ * kernel_size_ * kernel_size_;
   N_ = height_out_ * width_out_;
