@@ -330,7 +330,7 @@ message LayerParameter {
   optional SoftmaxParameter softmax_param = 125;
   optional SliceParameter slice_param = 126;
   optional TanHParameter tanh_param = 127;
-  optional HTanHParameter htanh_param = 131;
+  optional HTanHParameter htanh_param = 133;
   optional LocalParameter local_param = 132;
   optional ThresholdParameter threshold_param = 128;
   optional WindowDataParameter window_data_param = 129;
