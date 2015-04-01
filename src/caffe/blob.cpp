@@ -464,6 +464,7 @@ void Blob<Dtype>::FromProto(const BlobProto& proto, bool reshape) {
       diff_vec[i] = proto.diff(i);
     }
   }
+  proto.~BlobProto();
 }
 
 template <typename Dtype>
