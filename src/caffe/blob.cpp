@@ -460,9 +460,13 @@ void Blob<Dtype>::FromProto(const BlobProto& proto, bool reshape) {
   }
   if (proto.diff_size() > 0) {
     Dtype* diff_vec = mutable_cpu_diff();
-    for (int i = 0; i < count_; ++i) {
-      diff_vec[i] = proto.diff(i);
-    }
+
+    // Free the diff vec
+    free(diff_vec);
+//
+//    for (int i = 0; i < count_; ++i) {
+//      diff_vec[i] = proto.diff(i);
+//    }
   }
   proto.~BlobProto();
 }
