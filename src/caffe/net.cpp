@@ -688,11 +688,12 @@ void Net<Dtype>::Reshape() {
 template <typename Dtype>
 void Net<Dtype>::CopyTrainedLayersFrom(const NetParameter& param) {
   int num_source_layers = param.layer_size();
+  int total_num_params = 0;
   for (int i = 0; i < num_source_layers; ++i) {
     int prev_i = i;
     const LayerParameter& source_layer = param.layer(i);
     const string& source_layer_name = source_layer.name();
-    if (this->name() == "VGG" && source_layer_name == "fc6") continue;
+//    if (this->name() == "VGG" && source_layer_name == "fc6") continue;
     int target_layer_id = 0;
     while (target_layer_id != layer_names_.size() &&
         layer_names_[target_layer_id] != source_layer_name) {
@@ -719,7 +720,9 @@ void Net<Dtype>::CopyTrainedLayersFrom(const NetParameter& param) {
     }
     DLOG(INFO) << "Layer: " << source_layer_name << ", params: " << num_params;  
     i = prev_i;
+    total_num_params += num_params;
   }
+  DLOG(INFO) << "Total number of parameters for this network: " << total_num_params;
 }
 
 template <typename Dtype>
