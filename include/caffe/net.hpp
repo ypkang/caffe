@@ -35,7 +35,7 @@ class Net {
    *
    * You can get the input blobs using input_blobs().
    */
-  const vector<Blob<Dtype>*>& ForwardPrefilled(Dtype* loss = NULL);
+  const vector<Blob<Dtype>*>& ForwardPrefilled(Dtype* loss = NULL, std::string csv = "DEFAULT");
 
   /**
    * The From and To variants of Forward and Backward operate on the
@@ -45,7 +45,7 @@ class Net {
    * the middle may be incorrect if all of the layers of a fan-in are not
    * included.
    */
-  Dtype ForwardFromTo(int start, int end);
+  Dtype ForwardFromTo(int start, int end, std::string csv = "");
   Dtype ForwardFrom(int start);
   Dtype ForwardTo(int end);
   /// @brief Run forward using a set of bottom blobs, and return the result.

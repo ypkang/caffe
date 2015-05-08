@@ -285,6 +285,7 @@ class Layer {
     param_propagate_down_[param_id] = value;
   }
 
+  virtual inline std::string name() const { return layer_param_.name(); }
 
  protected:
   /** The protobuf that stores the layer parameters */

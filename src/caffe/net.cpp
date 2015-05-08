@@ -4,6 +4,8 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <sys/time.h>
+#include <sys/stat.h>
 
 #include "caffe/common.hpp"
 #include "caffe/layer.hpp"
@@ -460,7 +462,7 @@ void Net<Dtype>::GetLearningRateAndWeightDecay() {
 }
 
 template <typename Dtype>
-Dtype Net<Dtype>::ForwardFromTo(int start, int end) {
+Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
   CHECK_GE(start, 0);
   CHECK_LT(end, layers_.size());
   Dtype loss = 0;
@@ -469,12 +471,64 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end) {
       InputDebugInfo(i);
     }
   }
-  for (int i = start; i <= end; ++i) {
-    // LOG(ERROR) << "Forwarding " << layer_names_[i];
-    layers_[i]->Reshape(bottom_vecs_[i], top_vecs_[i]);
-    Dtype layer_loss = layers_[i]->Forward(bottom_vecs_[i], top_vecs_[i]);
-    loss += layer_loss;
-    if (debug_info_) { ForwardDebugInfo(i); }
+
+
+  bool layer_timing = false;
+  std::cout<<"INSIDE CAFFE LAYER LATENCY FILE IS "<<csv<<std::endl;
+  if(csv!="DEFAULT")
+    layer_timing = true;
+  
+  if(layer_timing){
+    std::ofstream layer_lat_csv;
+    layer_lat_csv.open(csv.c_str(), ios::out | ios::app);
+  
+    if(!layer_lat_csv.is_open())
+      LOG(FATAL) << "Cant open csv file for output";
+      
+    layer_lat_csv << "layer,latency\n";
+  
+    // Time each layer
+    struct timeval time_start;
+    struct timeval time_end;
+    struct timeval time_diff;
+    for (int i = start; i <= end; ++i) {
+      // LOG(ERROR) << "Forwarding " << layer_names_[i];
+      layers_[i]->Reshape(bottom_vecs_[i], top_vecs_[i]);
+      
+      gettimeofday(&time_start, NULL); 
+      Dtype layer_loss = layers_[i]->Forward(bottom_vecs_[i], top_vecs_[i]);
+      gettimeofday(&time_end, NULL);
+      timersub(&time_end, &time_start, &time_diff);
+      float layer_latency = (double)time_diff.tv_sec*(double)1000 + (double)time_diff.tv_usec/(double)1000;
+      char info[40];
+      sprintf(info, "%s,%.4f\n", layers_[i]->name().c_str(), layer_latency);
+      layer_lat_csv << info;
+      // Print intermediate values
+  //    std::cout<<"Output of layer " << layer_names_[i]<<std::endl;
+  //    for(int j = 0; j < top_vecs_[i][0]->count(); j++){
+  //      std::cout<< top_vecs_[i][0]->cpu_data()[j] << " ";
+  //    }
+  //    std::cout<<std::endl;
+      loss += layer_loss;
+      if (debug_info_) { ForwardDebugInfo(i); }
+    }
+  
+    layer_lat_csv.close();
+  }else{
+    for (int i = start; i <= end; ++i) {
+      // LOG(ERROR) << "Forwarding " << layer_names_[i];
+      layers_[i]->Reshape(bottom_vecs_[i], top_vecs_[i]);
+      
+      Dtype layer_loss = layers_[i]->Forward(bottom_vecs_[i], top_vecs_[i]);
+      // Print intermediate values
+  //    std::cout<<"Output of layer " << layer_names_[i]<<std::endl;
+  //    for(int j = 0; j < top_vecs_[i][0]->count(); j++){
+  //      std::cout<< top_vecs_[i][0]->cpu_data()[j] << " ";
+  //    }
+  //    std::cout<<std::endl;
+      loss += layer_loss;
+      if (debug_info_) { ForwardDebugInfo(i); }
+    }
   }
   return loss;
 }
@@ -490,11 +544,13 @@ Dtype Net<Dtype>::ForwardTo(int end) {
 }
 
 template <typename Dtype>
-const vector<Blob<Dtype>*>& Net<Dtype>::ForwardPrefilled(Dtype* loss) {
+const vector<Blob<Dtype>*>& Net<Dtype>::ForwardPrefilled(Dtype* loss, std::string csv) {
+  // csv is for writing latency for each layer 
+  std::cout<<"Inside forwardprefilled csv file is "<<csv<<std::endl;
   if (loss != NULL) {
-    *loss = ForwardFromTo(0, layers_.size() - 1);
+    *loss = ForwardFromTo(0, layers_.size() - 1, csv);
   } else {
-    ForwardFromTo(0, layers_.size() - 1);
+    ForwardFromTo(0, layers_.size() - 1, csv);
   }
   return net_output_blobs_;
 }
@@ -693,7 +749,7 @@ void Net<Dtype>::CopyTrainedLayersFrom(const NetParameter& param) {
     int prev_i = i;
     const LayerParameter& source_layer = param.layer(i);
     const string& source_layer_name = source_layer.name();
-//    if (this->name() == "VGG" && source_layer_name == "fc6") continue;
+    if (this->name() == "VGG" && source_layer_name == "fc6") continue;
     int target_layer_id = 0;
     while (target_layer_id != layer_names_.size() &&
         layer_names_[target_layer_id] != source_layer_name) {
@@ -729,6 +785,7 @@ template <typename Dtype>
 void Net<Dtype>::CopyTrainedLayersFrom(const string trained_filename) {
   NetParameter param;
   ReadNetParamsFromBinaryFileOrDie(trained_filename, &param);
+  DLOG(INFO)<<"Finish read in proto buf file";
   CopyTrainedLayersFrom(param);
 }
 
