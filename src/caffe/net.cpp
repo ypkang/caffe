@@ -474,7 +474,6 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
 
 
   bool layer_timing = false;
-  std::cout<<"INSIDE CAFFE LAYER LATENCY FILE IS "<<csv<<std::endl;
   if(csv!="DEFAULT")
     layer_timing = true;
   
@@ -483,7 +482,7 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
     layer_lat_csv.open(csv.c_str(), ios::out | ios::app);
   
     if(!layer_lat_csv.is_open())
-      LOG(FATAL) << "Cant open csv file for output";
+//      LOG(FATAL) << "Cant open csv file for output";
       
     layer_lat_csv << "layer,latency\n";
   
@@ -546,7 +545,6 @@ Dtype Net<Dtype>::ForwardTo(int end) {
 template <typename Dtype>
 const vector<Blob<Dtype>*>& Net<Dtype>::ForwardPrefilled(Dtype* loss, std::string csv) {
   // csv is for writing latency for each layer 
-  std::cout<<"Inside forwardprefilled csv file is "<<csv<<std::endl;
   if (loss != NULL) {
     *loss = ForwardFromTo(0, layers_.size() - 1, csv);
   } else {

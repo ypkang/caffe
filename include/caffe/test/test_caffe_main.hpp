@@ -19,7 +19,7 @@ using std::endl;
 #else
   #define CUDA_TEST_DEVICE -1
   #define CMAKE_SOURCE_DIR "src/"
-  #define EXAMPLES_SOURCE_DIR "examples/"
+  #define EXAMPLES_SOURCE_DIR "/home/ypkang/caffe/examples/"
   #define CMAKE_EXT ""
 #endif
 
