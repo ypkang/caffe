@@ -28,7 +28,6 @@ Net<Dtype>::Net(const NetParameter& param) {
 template <typename Dtype>
 Net<Dtype>::Net(const string& param_file, Phase phase) {
   NetParameter param;
-  std::cout<<"param_file is "<< param_file<<std::endl;
   ReadNetParamsFromTextFileOrDie(param_file, &param);
   param.mutable_state()->set_phase(phase);
   Init(param);
@@ -482,7 +481,7 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
     layer_lat_csv.open(csv.c_str(), ios::out | ios::app);
   
     if(!layer_lat_csv.is_open())
-//      LOG(FATAL) << "Cant open csv file for output";
+      LOG(FATAL) << "Cant open csv file for output";
       
     layer_lat_csv << "layer,latency\n";
   
@@ -491,23 +490,20 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
     struct timeval time_end;
     struct timeval time_diff;
     for (int i = start; i <= end; ++i) {
-      // LOG(ERROR) << "Forwarding " << layer_names_[i];
       layers_[i]->Reshape(bottom_vecs_[i], top_vecs_[i]);
       
+      Dtype layer_loss;
+
       gettimeofday(&time_start, NULL); 
-      Dtype layer_loss = layers_[i]->Forward(bottom_vecs_[i], top_vecs_[i]);
+      layer_loss = layers_[i]->Forward(bottom_vecs_[i], top_vecs_[i]);
       gettimeofday(&time_end, NULL);
+
       timersub(&time_end, &time_start, &time_diff);
       float layer_latency = (double)time_diff.tv_sec*(double)1000 + (double)time_diff.tv_usec/(double)1000;
       char info[40];
       sprintf(info, "%s,%.4f\n", layers_[i]->name().c_str(), layer_latency);
       layer_lat_csv << info;
-      // Print intermediate values
-  //    std::cout<<"Output of layer " << layer_names_[i]<<std::endl;
-  //    for(int j = 0; j < top_vecs_[i][0]->count(); j++){
-  //      std::cout<< top_vecs_[i][0]->cpu_data()[j] << " ";
-  //    }
-  //    std::cout<<std::endl;
+
       loss += layer_loss;
       if (debug_info_) { ForwardDebugInfo(i); }
     }
@@ -515,16 +511,9 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
     layer_lat_csv.close();
   }else{
     for (int i = start; i <= end; ++i) {
-      // LOG(ERROR) << "Forwarding " << layer_names_[i];
       layers_[i]->Reshape(bottom_vecs_[i], top_vecs_[i]);
       
       Dtype layer_loss = layers_[i]->Forward(bottom_vecs_[i], top_vecs_[i]);
-      // Print intermediate values
-  //    std::cout<<"Output of layer " << layer_names_[i]<<std::endl;
-  //    for(int j = 0; j < top_vecs_[i][0]->count(); j++){
-  //      std::cout<< top_vecs_[i][0]->cpu_data()[j] << " ";
-  //    }
-  //    std::cout<<std::endl;
       loss += layer_loss;
       if (debug_info_) { ForwardDebugInfo(i); }
     }
@@ -744,7 +733,6 @@ void Net<Dtype>::CopyTrainedLayersFrom(const NetParameter& param) {
   int num_source_layers = param.layer_size();
   int total_num_params = 0;
   for (int i = 0; i < num_source_layers; ++i) {
-    int prev_i = i;
     const LayerParameter& source_layer = param.layer(i);
     const string& source_layer_name = source_layer.name();
     if (this->name() == "VGG" && source_layer_name == "fc6") continue;
@@ -757,7 +745,6 @@ void Net<Dtype>::CopyTrainedLayersFrom(const NetParameter& param) {
       DLOG(INFO) << "Ignoring source layer " << source_layer_name;
       continue;
     }
-    DLOG(INFO) << "Copying source layer " << source_layer_name;
     vector<shared_ptr<Blob<Dtype> > >& target_blobs =
         layers_[target_layer_id]->blobs();
     CHECK_EQ(target_blobs.size(), source_layer.blobs_size())
@@ -772,8 +759,6 @@ void Net<Dtype>::CopyTrainedLayersFrom(const NetParameter& param) {
 
       source_layer.blobs(j).~BlobProto();
     }
-    DLOG(INFO) << "Layer: " << source_layer_name << ", params: " << num_params;  
-    i = prev_i;
     total_num_params += num_params;
   }
   DLOG(INFO) << "Total number of parameters for this network: " << total_num_params;
@@ -783,7 +768,6 @@ template <typename Dtype>
 void Net<Dtype>::CopyTrainedLayersFrom(const string trained_filename) {
   NetParameter param;
   ReadNetParamsFromBinaryFileOrDie(trained_filename, &param);
-  DLOG(INFO)<<"Finish read in proto buf file";
   CopyTrainedLayersFrom(param);
 }
 

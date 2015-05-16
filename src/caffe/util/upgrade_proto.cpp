@@ -650,7 +650,6 @@ bool UpgradeV1Net(const NetParameter& v1_net_param, NetParameter* net_param) {
       LOG(ERROR) << "Upgrade of input layer " << i << " failed.";
       is_fully_compatible = false;
     }
-    std::cout<<"DONE UPGRADE ONE LAYER"<<std::endl;
   }
   return is_fully_compatible;
 }
@@ -714,92 +713,74 @@ bool UpgradeV1LayerParameter(const V1LayerParameter& v1_layer_param,
     layer_param->add_loss_weight(v1_layer_param.loss_weight(i));
   }
   if (v1_layer_param.has_accuracy_param()) {
-    std::cout<<"UPGRADE accuracy LAYER"<<std::endl;
     layer_param->mutable_accuracy_param()->CopyFrom(
         v1_layer_param.accuracy_param());
   }
   if (v1_layer_param.has_argmax_param()) {
-    std::cout<<"UPGRADE argmax LAYER"<<std::endl;
     layer_param->mutable_argmax_param()->CopyFrom(
         v1_layer_param.argmax_param());
   }
   if (v1_layer_param.has_concat_param()) {
-    std::cout<<"UPGRADE concat LAYER"<<std::endl;
     layer_param->mutable_concat_param()->CopyFrom(
         v1_layer_param.concat_param());
   }
   if (v1_layer_param.has_contrastive_loss_param()) {
-    std::cout<<"UPGRADE contrastive LAYER"<<std::endl;
     layer_param->mutable_contrastive_loss_param()->CopyFrom(
         v1_layer_param.contrastive_loss_param());
   }
   if (v1_layer_param.has_convolution_param()) {
-    std::cout<<"UPGRADE CONV LAYER"<<std::endl;
     layer_param->mutable_convolution_param()->CopyFrom(
         v1_layer_param.convolution_param());
   }
   if (v1_layer_param.has_data_param()) {
-    std::cout<<"UPGRADE data LAYER"<<std::endl;
     layer_param->mutable_data_param()->CopyFrom(
         v1_layer_param.data_param());
   }
   if (v1_layer_param.has_dropout_param()) {
-    std::cout<<"UPGRADE dropout LAYER"<<std::endl;
     layer_param->mutable_dropout_param()->CopyFrom(
         v1_layer_param.dropout_param());
   }
   if (v1_layer_param.has_dummy_data_param()) {
-    std::cout<<"UPGRADE dummy LAYER"<<std::endl;
     layer_param->mutable_dummy_data_param()->CopyFrom(
         v1_layer_param.dummy_data_param());
   }
   if (v1_layer_param.has_eltwise_param()) {
-    std::cout<<"UPGRADE eltwise LAYER"<<std::endl;
     layer_param->mutable_eltwise_param()->CopyFrom(
         v1_layer_param.eltwise_param());
   }
   if (v1_layer_param.has_exp_param()) {
-    std::cout<<"UPGRADE exp LAYER"<<std::endl;
     layer_param->mutable_exp_param()->CopyFrom(
         v1_layer_param.exp_param());
   }
   if (v1_layer_param.has_hdf5_data_param()) {
-    std::cout<<"UPGRADE hdf5 LAYER"<<std::endl;
     layer_param->mutable_hdf5_data_param()->CopyFrom(
         v1_layer_param.hdf5_data_param());
   }
   if (v1_layer_param.has_hdf5_output_param()) {
-    std::cout<<"UPGRADE hdf5 out LAYER"<<std::endl;
     layer_param->mutable_hdf5_output_param()->CopyFrom(
         v1_layer_param.hdf5_output_param());
   }
   if (v1_layer_param.has_hinge_loss_param()) {
-    std::cout<<"UPGRADE hinge loss LAYER"<<std::endl;
     layer_param->mutable_hinge_loss_param()->CopyFrom(
         v1_layer_param.hinge_loss_param());
   }
   if (v1_layer_param.has_image_data_param()) {
-    std::cout<<"UPGRADE image data LAYER"<<std::endl;
     layer_param->mutable_image_data_param()->CopyFrom(
         v1_layer_param.image_data_param());
   }
   if (v1_layer_param.has_infogain_loss_param()) {
-    std::cout<<"UPGRADE infogain loss LAYER"<<std::endl;
     layer_param->mutable_infogain_loss_param()->CopyFrom(
         v1_layer_param.infogain_loss_param());
   }
   if (v1_layer_param.has_inner_product_param()) {
-    std::cout<<"UPGRADE INNER PRODUCT LAYER"<<std::endl;
     layer_param->mutable_inner_product_param()->CopyFrom(
         v1_layer_param.inner_product_param());
   }
   if (v1_layer_param.has_lrn_param()) {
-    std::cout<<"UPGRADE lrn LAYER"<<std::endl;
     layer_param->mutable_lrn_param()->CopyFrom(
         v1_layer_param.lrn_param());
   }
   if (v1_layer_param.has_memory_data_param()) {
-    std::cout<<"UPGRADE memory data LAYER"<<std::endl;
     layer_param->mutable_memory_data_param()->CopyFrom(
         v1_layer_param.memory_data_param());
   }
@@ -808,64 +789,50 @@ bool UpgradeV1LayerParameter(const V1LayerParameter& v1_layer_param,
         v1_layer_param.mvn_param());
   }
   if (v1_layer_param.has_pooling_param()) {
-    std::cout<<"UPGRADE POOLING LAYER"<<std::endl;
     layer_param->mutable_pooling_param()->CopyFrom(
         v1_layer_param.pooling_param());
   }
   if (v1_layer_param.has_power_param()) {
-    std::cout<<"UPGRADE power LAYER"<<std::endl;
     layer_param->mutable_power_param()->CopyFrom(
         v1_layer_param.power_param());
   }
   if (v1_layer_param.has_relu_param()) {
-    std::cout<<"UPGRADE RELU LAYER"<<std::endl;
     layer_param->mutable_relu_param()->CopyFrom(
         v1_layer_param.relu_param());
   }
   if (v1_layer_param.has_sigmoid_param()) {
-    std::cout<<"UPGRADE sigmoid LAYER"<<std::endl;
     layer_param->mutable_sigmoid_param()->CopyFrom(
         v1_layer_param.sigmoid_param());
   }
   if (v1_layer_param.has_softmax_param()) {
-    std::cout<<"UPGRADE softmax LAYER"<<std::endl;
     layer_param->mutable_softmax_param()->CopyFrom(
         v1_layer_param.softmax_param());
   }
   if (v1_layer_param.has_slice_param()) {
-
-    std::cout<<"UPGRADE slice LAYER"<<std::endl;
-
     layer_param->mutable_slice_param()->CopyFrom(
         v1_layer_param.slice_param());
   }
   if (v1_layer_param.has_tanh_param()) {
-    std::cout<<"UPGRADE tanh LAYER"<<std::endl;
     layer_param->mutable_tanh_param()->CopyFrom(
         v1_layer_param.tanh_param());
   }
   if (v1_layer_param.has_threshold_param()) {
-    std::cout<<"UPGRADE threshold LAYER"<<std::endl;
     layer_param->mutable_threshold_param()->CopyFrom(
         v1_layer_param.threshold_param());
   }
   if (v1_layer_param.has_window_data_param()) {
-    std::cout<<"UPGRADE window data LAYER"<<std::endl;
     layer_param->mutable_window_data_param()->CopyFrom(
         v1_layer_param.window_data_param());
   }
   if (v1_layer_param.has_transform_param()) {
-    std::cout<<"UPGRADE transform LAYER"<<std::endl;
     layer_param->mutable_transform_param()->CopyFrom(
         v1_layer_param.transform_param());
   }
   if (v1_layer_param.has_loss_param()) {
-    std::cout<<"UPGRADE loss LAYER"<<std::endl;
     layer_param->mutable_loss_param()->CopyFrom(
         v1_layer_param.loss_param());
   }
   if (v1_layer_param.has_local_param()) {
-    std::cout<<"UPGRADE LOCAL LAYER"<<std::endl;
     layer_param->mutable_local_param()->CopyFrom(
         v1_layer_param.local_param());
   }
