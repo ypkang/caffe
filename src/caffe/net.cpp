@@ -496,6 +496,7 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
 
       gettimeofday(&time_start, NULL); 
       layer_loss = layers_[i]->Forward(bottom_vecs_[i], top_vecs_[i]);
+      cudaDeviceSynchronize();
       gettimeofday(&time_end, NULL);
 
       timersub(&time_end, &time_start, &time_diff);
