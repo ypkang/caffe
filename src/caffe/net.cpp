@@ -483,7 +483,7 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
     if(!layer_lat_csv.is_open())
       LOG(FATAL) << "Cant open csv file for output";
       
-    layer_lat_csv << "layer,latency\n";
+    layer_lat_csv << "layer,latency,in_dim,out_dim\n";
   
     // Time each layer
     struct timeval time_start;
@@ -500,8 +500,16 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
 
       timersub(&time_end, &time_start, &time_diff);
       float layer_latency = (double)time_diff.tv_sec*(double)1000 + (double)time_diff.tv_usec/(double)1000;
-      char info[40];
-      sprintf(info, "%s,%.4f\n", layers_[i]->name().c_str(), layer_latency);
+      char info[100];
+      if(i > 0) {
+          Blob<Dtype>* top = top_vecs_[i][0];
+          Blob<Dtype>* b = bottom_vecs_[i][0];
+          sprintf(info, "%s,%.4f,%d,%d\n", layers_[i]->name().c_str(),
+                  layer_latency,
+                  b->count(),
+                  top->count()
+                 );
+      }
       layer_lat_csv << info;
 
       loss += layer_loss;
