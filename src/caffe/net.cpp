@@ -518,6 +518,17 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
                   top_shape[2],
                   top_shape[3]
                  );
+          // sprintf(info, "%s,%.4f,%d,%d,%d,%d,%d,%d,%d,%d\n", layers_[i]->name().c_str(),
+          //         layer_latency,
+          //         bottom_shape[0],
+          //         bottom_shape[1],
+          //         bottom_shape[2],
+          //         bottom_shape[3],
+          //         top_shape[0],
+          //         top_shape[1],
+          //         top_shape[2],
+          //         top_shape[3]
+          //        );
       }
       layer_lat_csv << info;
 

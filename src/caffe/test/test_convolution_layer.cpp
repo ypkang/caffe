@@ -504,6 +504,7 @@ TYPED_TEST(CuDNNConvolutionLayerTest, TestSetupCuDNN) {
   EXPECT_EQ(this->blob_top_2_->width(), 1);
 }
 
+// Conv layer profilling test
 TYPED_TEST(CuDNNConvolutionLayerTest, TestSimpleConvolutionCuDNN) {
   Caffe::set_mode(Caffe::GPU);
   this->blob_bottom_vec_.push_back(this->blob_bottom_2_);
