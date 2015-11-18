@@ -19,7 +19,7 @@ class DBTest : public ::testing::Test {
  protected:
   DBTest()
       : backend_(TypeParam::backend),
-      root_images_(string(EXAMPLES_SOURCE_DIR) + string("images/")) {}
+      root_images_(string("/home/ypkang/caffe/examples/") + string("images/")) {}
 
   virtual void SetUp() {
     MakeTempDir(&source_);
