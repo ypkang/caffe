@@ -501,29 +501,27 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end, std::string csv) {
 
       timersub(&time_end, &time_start, &time_diff);
       float layer_latency = (double)time_diff.tv_sec*(double)1000 + (double)time_diff.tv_usec/(double)1000;
+
       char info[100];
-      if(i > 0) {
-          Blob<Dtype>* top = top_vecs_[i][0];
-          vector<int> top_shape = top->shape();
-          Blob<Dtype>* b = bottom_vecs_[i][0];
-          vector<int> bottom_shape = b->shape();
-          // sprintf(info, "%.4f\n", layer_latency
-          //        );
-          sprintf(info, "%s,%.4f\n", layers_[i]->name().c_str(),
-                  layer_latency
-                 );
-          // sprintf(info, "%s,%.4f,%d,%d,%d,%d,%d,%d,%d,%d\n", layers_[i]->name().c_str(),
-          //         layer_latency,
-          //         bottom_shape[0],
-          //         bottom_shape[1],
-          //         bottom_shape[2],
-          //         bottom_shape[3],
-          //         top_shape[0],
-          //         top_shape[1],
-          //         top_shape[2],
-          //         top_shape[3]
-          //        );
-      }
+      sprintf(info, "%s,%.4f\n", layers_[i]->name().c_str(),layer_latency);
+
+      // Print data sizes
+      // Blob<Dtype>* top = top_vecs_[i][0];
+      // vector<int> top_shape = top->shape();
+      // Blob<Dtype>* b = bottom_vecs_[i][0];
+      // vector<int> bottom_shape = b->shape();
+      // sprintf(info, "%s,%.4f,%d,%d,%d,%d,%d,%d,%d,%d\n", layers_[i]->name().c_str(),
+      //         layer_latency,
+      //         bottom_shape[0],
+      //         bottom_shape[1],
+      //         bottom_shape[2],
+      //         bottom_shape[3],
+      //         top_shape[0],
+      //         top_shape[1],
+      //         top_shape[2],
+      //         top_shape[3]
+      //        );
+      
       layer_lat_csv << info;
 
       loss += layer_loss;

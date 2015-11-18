@@ -162,8 +162,9 @@ ifneq ($(CPU_ONLY), 1)
 	LIBRARIES := cudart cublas curand
 endif
 LIBRARIES += glog gflags protobuf leveldb snappy \
-	lmdb boost_system hdf5_hl hdf5 m \
-	opencv_core opencv_highgui opencv_imgproc
+	lmdb boost_system hdf5_hl hdf5 \
+	opencv_core opencv_imgproc pthread
+#opencv_highgui m
 PYTHON_LIBRARIES := boost_python python2.7
 WARNINGS := -Wall -Wno-sign-compare
 
@@ -344,7 +345,7 @@ NVCCFLAGS += -ccbin=$(CXX) -Xcompiler -fPIC $(COMMON_FLAGS)
 MATLAB_CXXFLAGS := $(CXXFLAGS) -Wno-uninitialized
 LINKFLAGS += -pthread -fPIC $(COMMON_FLAGS) $(WARNINGS)
 
-USE_PKG_CONFIG ?= 0
+USE_PKG_CONFIG = 0
 ifeq ($(USE_PKG_CONFIG), 1)
 	PKG_CONFIG := $(shell pkg-config opencv --libs)
 else
@@ -375,11 +376,16 @@ endif
 ##############################
 # Define build targets
 ##############################
+#.PHONY: all test clean docs linecount lint lintclean tools examples $(DIST_ALIASES) \
+#	py mat py$(PROJECT) mat$(PROJECT) proto runtest \
+#	superclean supercleanlist supercleanfiles warn everything
 .PHONY: all test clean docs linecount lint lintclean tools examples $(DIST_ALIASES) \
-	py mat py$(PROJECT) mat$(PROJECT) proto runtest \
+	py py$(PROJECT) proto runtest \
 	superclean supercleanlist supercleanfiles warn everything
 
-all: $(STATIC_NAME) $(DYNAMIC_NAME) tools examples
+
+#all: $(STATIC_NAME) $(DYNAMIC_NAME) tools examples
+all: $(STATIC_NAME) $(DYNAMIC_NAME)
 
 everything: $(EVERYTHING_TARGETS)
 
@@ -603,8 +609,8 @@ $(DISTRIBUTE_DIR): all py | $(DISTRIBUTE_SUBDIRS)
 	mkdir -p $(DISTRIBUTE_DIR)/include/caffe/proto
 	cp $(PROTO_GEN_HEADER_SRCS) $(DISTRIBUTE_DIR)/include/caffe/proto
 	# add tool and example binaries
-	cp $(TOOL_BINS) $(DISTRIBUTE_DIR)/bin
-	cp $(EXAMPLE_BINS) $(DISTRIBUTE_DIR)/bin
+	#cp $(TOOL_BINS) $(DISTRIBUTE_DIR)/bin
+	#cp $(EXAMPLE_BINS) $(DISTRIBUTE_DIR)/bin
 	# add libraries
 	cp $(STATIC_NAME) $(DISTRIBUTE_DIR)/lib
 	cp $(DYNAMIC_NAME) $(DISTRIBUTE_DIR)/lib
